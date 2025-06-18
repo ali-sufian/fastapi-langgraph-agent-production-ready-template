@@ -3,7 +3,7 @@ name: Build and Deploy Azure Container App
 on:
   push:
     branches:
-      - main
+      - development
     paths:
       - 'Dockerfile'
       - 'app/**'
