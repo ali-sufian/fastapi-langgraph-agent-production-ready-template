@@ -45,7 +45,7 @@ RUN mkdir -p /app/logs
 EXPOSE 8000
 
 # Log the environment we're using
-RUN echo "Using ${APP_ENV} environment"
+RUN echo "Using ${APP_ENV} environment changed"
 
 # Command to run the application
 ENTRYPOINT ["/app/scripts/docker-entrypoint.sh"]
