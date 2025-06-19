@@ -7,7 +7,7 @@ scrape_configs:
     metrics_path: '/metrics'
     scheme: 'http'
     static_configs:
-      - targets: ['app:8000']
+      - targets: ['https://fastapi-langgraph.redforest-921a896c.centralindia.azurecontainerapps.io:8000']
 
   - job_name: 'cadvisor'
     static_configs:
