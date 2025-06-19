@@ -7,6 +7,7 @@ on:
     paths:
       - 'Dockerfile'
       - 'app/**'
+      - 'prometheus/*'
 
 jobs:
   build-deploy:
