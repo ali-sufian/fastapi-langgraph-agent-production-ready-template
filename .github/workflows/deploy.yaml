@@ -30,6 +30,8 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }}
+          build-args: |
+            APP_ENV=development
 
       - name: Azure login
         uses: azure/login@v1
