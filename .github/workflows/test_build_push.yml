@@ -46,6 +46,11 @@ jobs:
           DOCKER_USERNAME: $username
           DOCKER_PASSWORD: $password
 
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Update Azure Container App (Simplified)
         run: |
           az containerapp update \
