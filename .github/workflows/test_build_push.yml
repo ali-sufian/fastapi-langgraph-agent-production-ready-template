@@ -51,18 +51,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build and push Docker image
-        run: |
-          docker build \
-            --build-arg APP_ENV=$APP_ENV \
-            --build-arg POSTGRES_URL="$POSTGRES_URL" \
-            --build-arg LLM_API_KEY="$LLM_API_KEY" \
-            --build-arg LANGFUSE_PUBLIC_KEY="$LANGFUSE_PUBLIC_KEY" \
-            --build-arg LANGFUSE_SECRET_KEY="$LANGFUSE_SECRET_KEY" \
-            --build-arg JWT_SECRET_KEY="$JWT_SECRET_KEY" \
-            -t ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }} .
-          docker push ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }}
-
       - name: Update Azure Container App with proper env vars
         run: |
           az containerapp update \
@@ -76,13 +64,13 @@ jobs:
               DEBUG=true \
               API_V1_STR=/api/v1 \
               ALLOWED_ORIGINS="http://localhost:3000,http://localhost:8000" \
-              LANGFUSE_PUBLIC_KEY="${{ secrets.LANGFUSE_SECRET_PUBLIC }}" \
-              LANGFUSE_SECRET_KEY="${{ secrets.LANGFUSE_SECRET_PRIV }}" \
+              LANGFUSE_PUBLIC_KEY="$LANGFUSE_PUBLIC_KEY" \
+              LANGFUSE_SECRET_KEY="$LANGFUSE_SECRET_KEY" \
               LANGFUSE_HOST=https://cloud.langfuse.com \
-              LLM_API_KEY="${{ secrets.OPENAPI_KEY }}" \
+              LLM_API_KEY="$LLM_API_KEY" \
               LLM_MODEL=gpt-4o-mini \
               DEFAULT_LLM_TEMPERATURE=0.2 \
-              JWT_SECRET_KEY="your-jwt-secret-key" \
+              JWT_SECRET_KEY="$JWT_SECRET_KEY" \
               JWT_ALGORITHM=HS256 \
               JWT_ACCESS_TOKEN_EXPIRE_DAYS=30 \
               POSTGRES_URL="postgresql://fastapidb:root.123@ali-fastapi.postgres.database.azure.com:5432/postgres" \
@@ -95,3 +83,8 @@ jobs:
               RATE_LIMIT_LOGIN="100 per minute" \
               LOG_LEVEL=DEBUG \
               LOG_FORMAT=console
+        env:
+          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_SECRET_PUBLIC }}
+          LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_PRIV }}
+          LLM_API_KEY: ${{ secrets.OPENAPI_KEY }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
