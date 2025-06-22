@@ -51,10 +51,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Update Azure Container App (Simplified)
+      - name: Update Azure Container App with .env variables
         run: |
+          # Clean and format .env.development for Azure CLI
+          ENV_VARS=$(grep -v '^#' .env.development | grep -v '^$' | sed -E 's/^([A-Za-z_][A-Za-z0-9_]*)=("?)(.*)\2$/\1="\3"/' | tr '\n' ' ')
+          
+          echo "Formatted environment variables: $ENV_VARS"
+          
           az containerapp update \
             --name fastapi-langgraph \
             --resource-group rg-assets \
             --image ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }} \
-            --set-env-vars "$(cat .env.development | grep -v '^#' | sed 's/^\(.*\)=\(.*\)$/\1="\2"/' | tr '\n' ' ')"
+            --set-env-vars "$ENV_VARS"
