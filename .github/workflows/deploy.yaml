@@ -8,6 +8,7 @@ on:
       - 'Dockerfile'
       - 'app/**'
       - 'prometheus/*'
+      - '.env.development'
 
 jobs:
   build-deploy:
