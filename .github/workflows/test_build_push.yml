@@ -64,13 +64,13 @@ jobs:
               DEBUG=true \
               API_V1_STR=/api/v1 \
               ALLOWED_ORIGINS="http://localhost:3000,http://localhost:8000" \
-              LANGFUSE_PUBLIC_KEY="$LANGFUSE_PUBLIC_KEY" \
-              LANGFUSE_SECRET_KEY="$LANGFUSE_SECRET_KEY" \
+              LANGFUSE_PUBLIC_KEY="${{ secrets.LANGFUSE_SECRET_PUBLIC }}" \
+              LANGFUSE_SECRET_KEY="${{ secrets.LANGFUSE_SECRET_PRIV }}" \
               LANGFUSE_HOST=https://cloud.langfuse.com \
-              LLM_API_KEY="$LLM_API_KEY" \
+              LLM_API_KEY="${{ secrets.OPENAPI_KEY }}" \
               LLM_MODEL=gpt-4o-mini \
               DEFAULT_LLM_TEMPERATURE=0.2 \
-              JWT_SECRET_KEY="$JWT_SECRET_KEY" \
+              JWT_SECRET_KEY="your-jwt-secret-key" \
               JWT_ALGORITHM=HS256 \
               JWT_ACCESS_TOKEN_EXPIRE_DAYS=30 \
               POSTGRES_URL="postgresql://fastapidb:root.123@ali-fastapi.postgres.database.azure.com:5432/postgres" \
@@ -83,8 +83,3 @@ jobs:
               RATE_LIMIT_LOGIN="100 per minute" \
               LOG_LEVEL=DEBUG \
               LOG_FORMAT=console
-        env:
-          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_SECRET_PUBLIC }}
-          LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_PRIV }}
-          LLM_API_KEY: ${{ secrets.OPENAPI_KEY }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
