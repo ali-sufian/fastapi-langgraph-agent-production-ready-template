@@ -63,19 +63,19 @@ jobs:
             -t ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }} .
           docker push ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }}
 
-      - name: Update Azure Container App with all .env variables
+      - name: Update Azure Container App with proper env vars
         run: |
-          # Generate --set-env-vars dynamically from .env.development
-          ENV_VARS=$(while IFS= read -r line; do
-            if [[ "$line" =~ ^[A-Z_] && ! "$line" =~ ^# ]]; then
-              key=$(echo "$line" | cut -d '=' -f1)
-              value=$(echo "$line" | cut -d '=' -f2- | sed 's/"/\\"/g')
-              echo "$key=\\\"$value\\\","
-            fi
-          done < .env.development | tr -d '\n' | sed 's/,$//')
-
+          # Convert .env file to Azure CLI format
+          ENV_VARS=$(grep -v '^#' .env.development | grep -v '^$' | while IFS= read -r line; do
+            key=$(echo "$line" | cut -d'=' -f1 | tr -d '[:space:]')
+            value=$(echo "$line" | cut -d'=' -f2- | sed 's/^"//; s/"$//')
+            echo "$key='$value'"
+          done | paste -sd ' ' -)
+      
+          echo "Setting environment variables: $ENV_VARS"
+          
           az containerapp update \
             --name fastapi-langgraph \
             --resource-group rg-assets \
             --image ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }} \
-            --set-env-vars "$ENV_VARS"
+            --set-env-vars $ENV_VARS
