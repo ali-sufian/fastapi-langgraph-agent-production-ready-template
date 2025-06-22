@@ -45,3 +45,11 @@ jobs:
         env:
           DOCKER_USERNAME: $username
           DOCKER_PASSWORD: $password
+
+      - name: Update Azure Container App (Simplified)
+        run: |
+          az containerapp update \
+            --name fastapi-langgraph \
+            --resource-group rg-assets \
+            --image ghcr.io/ali-sufian/fastapi-langgraph-agent-production-ready-template-app:${{ github.sha }} \
+            --set-env-vars "$(cat .env.development | grep -v '^#' | sed 's/^\(.*\)=\(.*\)$/\1="\2"/' | tr '\n' ' ')"
