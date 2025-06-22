@@ -5,9 +5,9 @@ global:
 scrape_configs:
   - job_name: 'fastapi'
     metrics_path: '/metrics'
-    scheme: 'https'
+    scheme: 'http'
     static_configs:
-      - targets: ['fastapi-langgraph.redforest-921a896c.centralindia.azurecontainerapps.io']
+      - targets: ['fastapi-langgraph.redforest-921a896c.centralindia.azurecontainerapps.io:443']
 
   - job_name: 'cadvisor'
     static_configs:

@@ -65,14 +65,16 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /:/rootfs:ro                         # Host filesystem (read-only)
+      - /var/run:/var/run:rw                 # Process/container runtime data
+      - /sys:/sys:ro                         # Kernel metrics
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker API access (critical)
+    privileged: true                         # Required for full host monitoring
+    devices:
+      - "/dev/kmsg:/dev/kmsg"                # Kernel logs
     networks:
       - monitoring
-    restart: always
-
+    restart: unless-stopped                  # Better restart policy
 
 networks:
   monitoring:
