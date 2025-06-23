@@ -82,4 +82,5 @@ jobs:
               RATE_LIMIT_MESSAGES="200 per minute" \
               RATE_LIMIT_LOGIN="100 per minute" \
               LOG_LEVEL=DEBUG \
-              LOG_FORMAT=console
+              LOG_FORMAT=console \
+              TEST=123
